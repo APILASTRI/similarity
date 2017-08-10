@@ -44,15 +44,14 @@ def MCL(graph,inflation,e):
 
 	adjacency = adjacency.todense()
 
-	
-	print adjacency
-
 	#Normalization of Matrix
 	normalized_matrix = adjacency / adjacency.sum(axis=0)	
-
+    
+    """ Step for Convergence  """
 	#Iterate until convergence is reached
 	for j in range(0,2):
 		
+		""" Power Operation """
 		#Matrix multiplication
 		for i in range(0,e-1):
 			normalized_matrix = np.matmul(normalized_matrix,normalized_matrix)
@@ -60,25 +59,18 @@ def MCL(graph,inflation,e):
 		#Create Empty Numpy array
 		new_array = np.zeros(shape=(len(adjacency),len(adjacency)))
 
+		""" Inflation Operation """
 		#Inflate each column with the given power
 		for i in range(0,len(new_array)):
 			new_array[i] = np.power(normalized_matrix[i],inflation)
 
 		#Normalize the matrix
-		new_array = new_array / new_array.sum(axis=0)
+		normalized_matrix = new_array / new_array.sum(axis=0)
 		
-		#print new_array
-		#print np.matmul(new_array,new_array)
 		
-		normalized_matrix = new_array
 
-		#Retranspose to get back the original orientation
-		#normalized_matrix = new_array.transpose()
-
-		#break
-
-	print normalized_matrix
-
+	
+    
 	return normalized_matrix		
 
 
