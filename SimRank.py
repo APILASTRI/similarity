@@ -28,7 +28,7 @@ import pandas as pd
 from categorical_cluster import hierarchical_mixed
 from matplotlib import offsetbox
 from sklearn import (manifold, datasets, decomposition, ensemble,
-             discriminant_analysis, random_projection)
+			 discriminant_analysis, random_projection)
 
 
 #Function to get the Gene Regulatory Network for the corresponding InterMine Model
@@ -53,7 +53,7 @@ def properties(regulatory_graph):
 	self_loops = map((lambda graph: graph[0]==graph[1]),regulatory_graph)
 	self_loops = sum(self_loops)
 
-    #Returns number of Self-loops
+	#Returns number of Self-loops
 	return self_loops
 
 #Function to populate the Similarity Matrix for the first time
@@ -68,7 +68,7 @@ def get_similarity_matrix(di_graph):
 	for i in range(0,dimension):
 		matrix[i][i] = 1
 
-
+	
 	return matrix
 
 #Function to Implement the Similarity Score for each pair of incoming edges
@@ -108,8 +108,8 @@ def compute_scores(graph,old_matrix,current_matrix,decay,incoming_a,incoming_b,i
 def calculate_similarity_scores(graph,matrix,iteration,decay):
 	#Initial Matrix
 	current_matrix = matrix
-    
-    #Each Iteration will produce a Similarity Matrix which will be used in the next Iteration
+	
+	#Each Iteration will produce a Similarity Matrix which will be used in the next Iteration
 	for k in range(0,iteration):
 		old_matrix = current_matrix.copy()
 		#Calculating S(a,b) = (C/|I(a)| * |I(b)| ) * (For each(i,j) : Sim (I(i),I(j)))
@@ -155,6 +155,30 @@ def compute_sim_rank(graph):
 	return nodes,final_matrix
 
 
+#Function for a test
+def test():
+	#Initialise NetworkX Instance for Test Graph
+	test_graph = nx.DiGraph()
+
+	#Add the Edges for the test graph
+	test_graph.add_edges_from([(1,2),(1,4),(3,2),(3,4),(3,5),(5,3),(5,2)])
+
+	nodes = test_graph.nodes()
+
+	adjacency = nx.to_numpy_matrix(test_graph)
+
+	sim_mat = get_similarity_matrix(test_graph)
+
+	fin_mat = calculate_similarity_scores(test_graph,sim_mat,3,0.73)
+
+	#Print the Matrix into the Test File
+	f_test = open('Tests/SimRank1.txt','w')
+
+	f_test.write(str(fin_mat))
+
+	f_test.close()
+
+
 #Function to get the top matching similar genes for each gene -- This function returns the top 3 Similar Genes for each Gene
 def get_top_matches(similarity_matrix,nodes):
 
@@ -170,8 +194,8 @@ def get_top_matches(similarity_matrix,nodes):
 
 		#Find the Maximum value
 		max_similarity_score = max(similarities)
-        
-        #Find the corresponding Genes only if the similarity score is not zero (Zero means no similar genes exist)
+		
+		#Find the corresponding Genes only if the similarity score is not zero (Zero means no similar genes exist)
 		if max_similarity_score != 0 :
 			#Extract the indices
 			indexes = np.argwhere(similarities == max_similarity_score)
@@ -193,6 +217,8 @@ def get_top_matches(similarity_matrix,nodes):
 def main():
 	#Gene Regulatory Network (Directed Graph)
 	regulatory_graph = get_regulatory_network()
+
+	test()
 	
 	#Computing the SimRank Matrix
 	nodes, similarity_matrix = compute_sim_rank(regulatory_graph)
@@ -201,12 +227,14 @@ def main():
 	similar_genes = get_top_matches(similarity_matrix,nodes)
 
 	#Conversion into JSON
-	similar_json = json.dumps(similar_genes, ensure_ascii = False)
+	similar_json = json.dumps(similar_genes, ensure_ascii = True)
 
 	#Storing the top similar genes in a JSON file
 	with open('similar_regulatory.json','w') as outfile:
 		json.dump(similar_json,outfile)
 
+
+	
 	
 
 
