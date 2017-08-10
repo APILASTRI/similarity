@@ -77,6 +77,8 @@ def MCL(graph,inflation,e):
 def test_results(inflation,e):
 	#Test Graph
 	test_graph = nx.Graph()
+
+	#Add Edges
 	test_graph.add_edge(1,2)
 	test_graph.add_edge(1,3)
 	test_graph.add_edge(2,3)
