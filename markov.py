@@ -1,6 +1,6 @@
 """  InterMine @ Open Genome Informatics 
-      -> Implementation of Markov Clustering to obtain the clusters in Gene Interaction Network              """
-      
+	  -> Implementation of Markov Clustering to obtain the clusters in Gene Interaction Network              """
+	  
 
 #Libraries
 from __future__ import division
@@ -21,17 +21,17 @@ from sklearn.metrics import silhouette_samples, silhouette_score
 from sklearn.preprocessing import normalize
 from matplotlib import offsetbox
 from sklearn import (manifold, datasets, decomposition, ensemble,
-             discriminant_analysis, random_projection)
+			 discriminant_analysis, random_projection)
 
 """ Algorithm Steps : Markov Clustering
 
-     1. Find Adjacency Matrix
-     2. Add Self Self-Loops
-     3. Normalize the Matrix
-     4. Do matrix multiplication according to the given power value
-     5. Do the process of inflation for each column
-     6. Repeat Steps 4 and 5 until convergence 
-     7. Inspect the Matrix to get clusters                                         """
+	 1. Find Adjacency Matrix
+	 2. Add Self Self-Loops
+	 3. Normalize the Matrix
+	 4. Do matrix multiplication according to the given power value
+	 5. Do the process of inflation for each column
+	 6. Repeat Steps 4 and 5 until convergence 
+	 7. Inspect the Matrix to get clusters                                         """
 
 
 #Function to find holes in the feature set for the genes
@@ -42,25 +42,20 @@ def MCL(graph,inflation,e):
 	#Convert into adjacency matrix
 	adjacency = nx.adjacency_matrix(graph)
 
-	#Addition of Self-Loops
+	adjacency = adjacency.todense()
 
-	#Transpose the matrix
-	adjacency_mat = adjacency.transpose()
-
-	#Conversion into dense matrix
-	adjacency = adjacency_mat.todense()
+	
+	print adjacency
 
 	#Normalization of Matrix
-	normalized_matrix = adjacency / adjacency.sum(axis=0)
+	normalized_matrix = adjacency / adjacency.sum(axis=0)	
 
-	#Iterate for a duration for convergence
-	for j in range(0,10):
+	#Iterate until convergence is reached
+	for j in range(0,2):
+		
 		#Matrix multiplication
 		for i in range(0,e-1):
 			normalized_matrix = np.matmul(normalized_matrix,normalized_matrix)
-
-		#Inflation of the columns
-		temp_matrix = normalized_matrix.transpose()
 
 		#Create Empty Numpy array
 		new_array = np.zeros(shape=(len(adjacency),len(adjacency)))
@@ -69,10 +64,20 @@ def MCL(graph,inflation,e):
 		for i in range(0,len(new_array)):
 			new_array[i] = np.power(normalized_matrix[i],inflation)
 
-        #Retranspose to get back the original orientation
-		normalized_matrix = new_array.transpose()
+		#Normalize the matrix
+		new_array = new_array / new_array.sum(axis=0)
+		
+		#print new_array
+		#print np.matmul(new_array,new_array)
+		
+		normalized_matrix = new_array
 
+		#Retranspose to get back the original orientation
+		#normalized_matrix = new_array.transpose()
 
+		#break
+
+	print normalized_matrix
 
 	return normalized_matrix		
 
@@ -96,12 +101,28 @@ def main():
 	for edge in graph_info:
 		#Adding the edge in NetworkX
 		graph.add_edge(edge[0],edge[2])
+		if i == 5:
+			break
+		i += 1
 
 	inflation = 2
 	e = 2
 
+
+	test_graph = nx.Graph()
+	test_graph.add_edge(1,2)
+	test_graph.add_edge(1,4)
+	test_graph.add_edge(1,3)
+	test_graph.add_edge(2,4)
+	test_graph.add_edge(1,1)
+	test_graph.add_edge(2,2)
+	test_graph.add_edge(3,3)
+	test_graph.add_edge(4,4)
+
 	#Perform MCL Algorithm
-	MCL_matrix = MCL(graph,inflation,e)	
+	MCL_matrix = MCL(test_graph,inflation,e)	
+
+	#print MCL_matrix
 
 
 
