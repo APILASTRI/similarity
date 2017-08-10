@@ -146,7 +146,8 @@ def main():
 	test_results(inflation,e)
 
 	#Perform MCL Algorithm
-	#MCL_matrix = MCL(graph,inflation,e)	
+	#MCL_matrix = MCL(graph,inflation,e)
+	#pruned_matrix = prune(MCL_matrix)	
 
 
 main()
