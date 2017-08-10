@@ -73,6 +73,17 @@ def MCL(graph,inflation,e):
 	return normalized_matrix	
 
 
+#Function to prune the matrix
+def prune(MCL_matrix):
+	#Set a threshold below which all values will be pruned
+	threshold = 0.001
+
+	indexes = MCL_matrix < threshold
+
+	MCL_matrix[indexes] = 0
+
+	return MCL_matrix
+
 #Function to get the test results for a smaller graph
 def test_results(inflation,e):
 	#Test Graph
@@ -95,6 +106,8 @@ def test_results(inflation,e):
 
     #Resultant Matrix which is to be Interpreted
 	MCL_matrix = MCL(test_graph,inflation,e)
+
+	pruned_matrix = prune(MCL_matrix)
 
 	#Print the Result into a File
 	f_results = open('Tests/markov1.txt','w')
@@ -133,7 +146,7 @@ def main():
 	test_results(inflation,e)
 
 	#Perform MCL Algorithm
-	MCL_matrix = MCL(graph,inflation,e)	
+	#MCL_matrix = MCL(graph,inflation,e)	
 
 
 main()
