@@ -41,15 +41,16 @@ def MCL(graph,inflation,e):
 
 	#Convert into adjacency matrix
 	adjacency = nx.adjacency_matrix(graph)
-
+    
+    #Convert from Sparse to Dense Matrix
 	adjacency = adjacency.todense()
 
 	#Normalization of Matrix
 	normalized_matrix = adjacency / adjacency.sum(axis=0)	
-    
-    """ Step for Convergence  """
+	
+	""" Step for Convergence  """
 	#Iterate until convergence is reached
-	for j in range(0,2):
+	for j in range(0,5):
 		
 		""" Power Operation """
 		#Matrix multiplication
@@ -65,15 +66,41 @@ def MCL(graph,inflation,e):
 			new_array[i] = np.power(normalized_matrix[i],inflation)
 
 		#Normalize the matrix
-		normalized_matrix = new_array / new_array.sum(axis=0)
-		
-		
+		normalized_matrix = new_array / new_array.sum(axis=0)	
 
 	
-    
-	return normalized_matrix		
+
+	return normalized_matrix	
 
 
+#Function to get the test results for a smaller graph
+def test_results(inflation,e):
+	#Test Graph
+	test_graph = nx.Graph()
+	test_graph.add_edge(1,2)
+	test_graph.add_edge(1,3)
+	test_graph.add_edge(2,3)
+	test_graph.add_edge(3,4)
+	test_graph.add_edge(4,5)
+	test_graph.add_edge(4,6)
+	test_graph.add_edge(5,6)
+	test_graph.add_edge(1,1)
+	test_graph.add_edge(2,2)
+	test_graph.add_edge(3,3)
+	test_graph.add_edge(4,4)
+	test_graph.add_edge(5,5)
+	test_graph.add_edge(6,6)
+
+    #Resultant Matrix which is to be Interpreted
+	MCL_matrix = MCL(test_graph,inflation,e)
+
+	#Print the Result into a File
+	f_results = open('Tests/markov1.txt','w')
+
+	for row in MCL_matrix:
+		f_results.write(str(row) + "\n")
+
+	f_results.close()
 
 
 def main():
@@ -93,30 +120,18 @@ def main():
 	for edge in graph_info:
 		#Adding the edge in NetworkX
 		graph.add_edge(edge[0],edge[2])
-		if i == 5:
-			break
-		i += 1
-
+		
+	#Inflation Operator for each column of the matrix
 	inflation = 2
+
+	#Power of the Matrix
 	e = 2
 
-
-	test_graph = nx.Graph()
-	test_graph.add_edge(1,2)
-	test_graph.add_edge(1,4)
-	test_graph.add_edge(1,3)
-	test_graph.add_edge(2,4)
-	test_graph.add_edge(1,1)
-	test_graph.add_edge(2,2)
-	test_graph.add_edge(3,3)
-	test_graph.add_edge(4,4)
+	#Print the test results into file
+	test_results(inflation,e)
 
 	#Perform MCL Algorithm
-	MCL_matrix = MCL(test_graph,inflation,e)	
-
-	#print MCL_matrix
-
-
+	MCL_matrix = MCL(graph,inflation,e)	
 
 
 main()
