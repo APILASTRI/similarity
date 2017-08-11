@@ -159,6 +159,56 @@ def draw_communities(communities,g):
 	plt.show()
 
 
+#Function for Test the Algorithm for a known Graph
+def test_community():
+	#Defining the test graph
+	test_graph = nx.Graph()
+
+	#Add edges into the graph
+	test_graph.add_edge(1,2)
+	test_graph.add_edge(1,3)
+	test_graph.add_edge(2,3)
+	test_graph.add_edge(3,4)
+	test_graph.add_edge(4,5)
+	test_graph.add_edge(4,6)
+	test_graph.add_edge(5,6)
+
+	#Adjacency Matrix -- Returns a Scipy Sparse Matrix
+	adjacency_matrix = nx.adj_matrix(test_graph)
+
+	#Number of Nodes
+	n = nx.number_of_nodes(test_graph)
+
+	#Calculating the weighted degree for each node
+	degree_node = get_degree(test_graph,adjacency_matrix)
+
+	#Sum of Edge Weights
+	sum_of_edge_weights =  np.sum(adjacency_matrix)
+
+	g = nx.Graph()
+	g = test_graph.copy()
+
+	#Function Call for calling Girvan Community Detection Algorithm
+	community_set = compute_girvan_newman(test_graph,degree_node,sum_of_edge_weights)
+
+	#List of Communities
+	communities = []
+
+	#Formulation of Communities as a list
+	for community in community_set:
+		temp = list(community)
+		communities.append(temp)
+
+	
+	#Function call to draw and color communities
+	draw_communities(communities,g)
+
+	#Print the results into the test file
+	f_test = open('Tests/community_nonoverlapping.txt','w')
+
+	f_test.write(str(communities))
+
+	f_test.close()
 
 
 #Function to call sub-parts of Girvan Algorithm for Community Detection
@@ -213,11 +263,10 @@ def main():
 		temp.append(1)
 		edges.append(temp)
 
+	#test_community()
+
 	#Adjacency Matrix -- Returns a Scipy Sparse Matrix
 	adjacency_matrix = nx.adj_matrix(graph)
-
-	#nx.draw(graph)
-	#plt.show()
 
 	#Number of Nodes
 	n = nx.number_of_nodes(graph)
@@ -234,7 +283,7 @@ def main():
 	#Function Call for calling Girvan Community Detection Algorithm
 	community_set = compute_girvan_newman(graph,degree_node,sum_of_edge_weights)
 
-    #List of Communities
+	#List of Communities
 	communities = []
 
 	#Formulation of Communities as a list
@@ -242,7 +291,7 @@ def main():
 		temp = list(community)
 		communities.append(temp)
 
-    #Function call to draw and color communities
+	#Function call to draw and color communities
 	draw_communities(communities,g)
 
 	
