@@ -79,6 +79,33 @@ def get_communities(k,graph):
 	return communities		
 
 
+#Function for Test Graph Results
+def test():
+	#Initialise Test Graph
+	test_graph = nx.Graph()
+
+	#Add Edges to the Test Graph
+	test_graph.add_edge(1,2,weight=1.0)
+	test_graph.add_edge(1,3,weight=1.0)
+	test_graph.add_edge(2,3,weight=1.0)
+	test_graph.add_edge(3,4,weight=1.0)
+	test_graph.add_edge(4,5,weight=1.0)
+	test_graph.add_edge(4,6,weight=1.0)
+	test_graph.add_edge(5,6,weight=1.0)
+
+	#Write to File
+	f_test = open('Tests/overlapping_communities.txt','w')
+    
+    #Get the communities with k set as 2
+	communities = get_communities(2,test_graph)
+
+	for community in communities:
+		f_test.write(str(community))
+
+
+	f_test.close()
+
+
 def main(k):
 	#Loading gene_interactions JSON file into a variable 
 	with open('JSON rows/gene_interactions.json') as json_data:
@@ -90,6 +117,9 @@ def main(k):
 
 	source = []
 	target = []
+
+	test()
+	"""
 
 	#Creating NetworkX instance
 	graph = nx.Graph()
@@ -110,7 +140,7 @@ def main(k):
 
 	communities = get_communities(k,graph)
 
-	print communities
+	print communities """
 
 
 
