@@ -118,8 +118,8 @@ def main(k):
 	source = []
 	target = []
 
-	test()
-	"""
+	#test()
+	
 
 	#Creating NetworkX instance
 	graph = nx.Graph()
@@ -140,7 +140,7 @@ def main(k):
 
 	communities = get_communities(k,graph)
 
-	print communities """
+	print communities 
 
 
 
