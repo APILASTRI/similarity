@@ -11,8 +11,6 @@ import re
 import math
 import string
 import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib import pylab
 import sys
 import numpy as np
 from sklearn.decomposition import PCA, TruncatedSVD
@@ -146,8 +144,9 @@ def main():
 	test_results(inflation,e)
 
 	#Perform MCL Algorithm
-	#MCL_matrix = MCL(graph,inflation,e)
-	#pruned_matrix = prune(MCL_matrix)	
+	MCL_matrix = MCL(graph,inflation,e)
+	pruned_matrix = prune(MCL_matrix)	
+	print pruned_matrix
 
 
 main()
