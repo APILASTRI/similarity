@@ -17,7 +17,6 @@ from sklearn.decomposition import PCA, TruncatedSVD
 from sklearn.cluster import KMeans,AgglomerativeClustering, MiniBatchKMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
 from sklearn.preprocessing import normalize
-from matplotlib import offsetbox
 from sklearn import (manifold, datasets, decomposition, ensemble,
 			 discriminant_analysis, random_projection)
 
